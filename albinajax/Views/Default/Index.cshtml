@@ -1,0 +1,60 @@
+﻿@using albinajax.Models;
+@model Person
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    @* För att inte behöva ladda om sidan vid en submit behövs unobtrusive.ajax filen, och den kräver jquery *@
+    <script src="~/Scripts/jquery-1.8.0.min.js" type="text/javascript"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js" type="text/javascript"></script>
+</head>
+<body>
+    <div id="formDiv">
+        @* Använder Ajax.BeginForm för att skapa upp ett HTML formulär *@
+        @* InsertionMode = Hur man vill stoppa in den nya datan, t.ex. append:a på tidigare data, ersätta tidigare data *@
+        @* UpdateTargetId = IDt på elementet (oftast en div) där du vill stoppa in det du returnerar*@
+        @using (Ajax.BeginForm("PostUser", new AjaxOptions
+        {
+            HttpMethod = "POST",
+            InsertionMode = InsertionMode.Replace,
+            UpdateTargetId = "listDiv",
+            OnSuccess = "clearFormFields"
+        }))
+        {
+            @Html.LabelFor(model => model.FirstName)
+            @Html.TextBoxFor(model => model.FirstName, new { id = "firstNameInput" })
+            <br />
+            @Html.LabelFor(model => model.LastName)
+            @Html.TextBoxFor(model => model.LastName, new { id = "lastNameInput" })
+            <br />
+            @Html.LabelFor(model => model.Email)
+            @Html.TextBoxFor(model => model.Email, new { id = "emailInput" })
+            <br />
+            <input type="submit" value="Submit"/>
+        }
+    </div>
+
+    @* Den div jag vill uppdatera med ny data. Eftersom jag satt InsertionMode.Replace på min form så kommer allt i slängas.
+       Jag valde att lägga in en Html.Partial där för att visa upp startvärden, antagligen inte en jättebra lösning att använda Session för det :D *@
+    <div id="listDiv">
+        @Html.Partial("_PeopleListPartialView", Session["defaultPeopleList"] as List<Person>)
+    </div>
+
+    @* Tömmer input-fälten efter submit *@
+    <script type="text/javascript">
+        function clearFormFields() {
+            $('#firstNameInput').val("");
+            $('#lastNameInput').val("");
+            $('#emailInput').val("");
+        }
+    </script>
+</body>
+
+</html>

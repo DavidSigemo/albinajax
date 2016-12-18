@@ -1,0 +1,34 @@
+﻿@using albinajax.Models;
+@model IEnumerable<Person>
+
+<table>
+    <thead>
+        <tr>
+            <th>
+                Förnamn
+            </th>
+            <th>
+                Efternamn
+            </th>
+            <th>
+                Email
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (Person person in Model)
+        {
+            <tr>
+                <td>
+                    @person.FirstName
+                </td>
+                <td>
+                    @person.LastName
+                </td>
+                <td>
+                    @person.Email
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
